@@ -1,8 +1,12 @@
-import React, {useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import {v4 as uuidv4} from 'uuid'
 
 function Form(props) {
-    const {input, setInput, todos, setTodos, editTodo, setEditTodo} = props
+    const [input, setInput] = useState('')
+
+    const { todos, setTodos, editTodo, setEditTodo} = props
+
+    const inputRef = useRef()
 
     const updateTodo = (title, id, completed) => {
         const newTodo = todos.map((todo) =>
@@ -15,6 +19,7 @@ function Form(props) {
     useEffect(()=> {
         if(editTodo){
             setInput(editTodo.title)
+            inputRef.current.focus()
         } else{
             setInput('')
         }
@@ -28,13 +33,15 @@ function Form(props) {
         e.preventDefault()
 
         if(!editTodo){
-            setTodos([{
+            setTodos([...todos,{
                 id: uuidv4(), 
                 title: input,
-                complete: false
-            }, ...todos])
+                completed: false
+            }])
 
             setInput('')
+            inputRef.current.focus()
+            
 
         } else {
             updateTodo(input, editTodo.id, editTodo.completed)
@@ -43,8 +50,9 @@ function Form(props) {
 
     }
   return (
-    <form onSubmit={onFormSubmit}>
+    <form className="form" onSubmit={onFormSubmit}>
         <input 
+            ref = {inputRef}
             type="text"
             placeholder="Enter a Todo ..."
             className="task-input"
