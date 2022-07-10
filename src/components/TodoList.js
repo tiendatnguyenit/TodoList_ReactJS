@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 function TodoList(props) {
   const { todos, setTodos, setEditTodo } = props;
@@ -16,7 +16,6 @@ function TodoList(props) {
 
   const handleEdit = ({ id }) => {
     const findTodo = todos.find((todo) => todo.id === id);
-
     setEditTodo(findTodo);
   };
 
