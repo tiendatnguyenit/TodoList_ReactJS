@@ -3,7 +3,6 @@ import {v4 as uuidv4} from 'uuid'
 
 function Form(props) {
     const [input, setInput] = useState('')
-
     const { todos, setTodos, editTodo, setEditTodo} = props
 
     const inputRef = useRef()
@@ -31,20 +30,30 @@ function Form(props) {
 
     const onFormSubmit = (e) => {
         e.preventDefault()
-
         if(!editTodo){
+            if(!input || /^\s*$/.test(input)){
+                setInput('')
+                inputRef.current.focus()
+                alert('Invalid input data. Please try again!')
+                return
+            }
             setTodos([...todos,{
                 id: uuidv4(), 
-                title: input,
+                title: input.trim(),
                 completed: false
             }])
 
             setInput('')
             inputRef.current.focus()
-            
 
         } else {
-            updateTodo(input, editTodo.id, editTodo.completed)
+            if(!input || /^\s*$/.test(input)){
+                setInput('')
+                inputRef.current.focus()
+                alert('Invalid input data. Please try again!')
+                return
+            }
+            updateTodo(input.trim(), editTodo.id, editTodo.completed)
         }
 
 
