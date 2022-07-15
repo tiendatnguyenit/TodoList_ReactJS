@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { v4 as uuidv4 } from "uuid";
+import callApi from "../ultils/apiCaller";
 
 function Form(props) {
   const { todos, setTodos, editTodo, setEditTodo } = props;
@@ -7,12 +7,19 @@ function Form(props) {
 
   const inputRef = useRef();
 
-  const updateTodo = (title, id, completed) => {
+  const updateTodo = (title, idUser, completed, id) => {
     const newTodo = todos.map((todo) =>
-      todo.id === id ? { title, id, completed } : todo
+      todo.id === id ? { title, idUser, completed, id } : todo
     );
-    setTodos(newTodo);
-    setEditTodo("");
+
+    callApi(`todos/${id}`, "PUT", {
+      title,
+      completed,
+      idUser,
+    }).then((res) => {
+      setTodos(newTodo);
+      setEditTodo("");
+    });
   };
 
   useEffect(() => {
@@ -38,14 +45,21 @@ function Form(props) {
         return;
       }
 
-      setTodos([
-        ...todos,
-        {
-          id: uuidv4(),
-          title: input.trim(),
-          completed: false,
-        },
-      ]);
+      callApi("todos", "POST", {
+        title: input.trim(),
+        completed: false,
+        idUser: 1,
+      }).then((res) => {
+        setTodos([
+          ...todos,
+          {
+            id: res.data.id,
+            title: input.trim(),
+            completed: false,
+            idUser: 1,
+          },
+        ]);
+      });
 
       setInput("");
       inputRef.current.focus();
@@ -56,7 +70,12 @@ function Form(props) {
         alert("Invalid input data. Please try again!");
         return;
       }
-      updateTodo(input.trim(), editTodo.id, editTodo.completed);
+      updateTodo(
+        input.trim(),
+        editTodo.idUser,
+        editTodo.completed,
+        editTodo.id
+      );
     }
   };
   return (

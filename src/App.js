@@ -4,18 +4,24 @@ import Header from "./components/Header";
 import Form from "./components/Form";
 import TodoList from "./components/TodoList";
 import Footer from "./components/Footer";
+import callApi from "./ultils/apiCaller";
 
 function App() {
-  const initialState = JSON.parse(localStorage.getItem("todos")) || [];
-  const [todos, setTodos] = useState(initialState);
+  const [todos, setTodos] = useState([]);
   const [editTodo, setEditTodo] = useState(null);
   const [isAll, setIsAll] = useState(true);
   const [isActive, setIsActive] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    callApi('todos', 'GET', null).then(res => {
+      setTodos(res.data)
+    });
+  }, []);
+
+  // useEffect(() => {
+  //   localStorage.setItem("todos", JSON.stringify(todos));
+  // }, [todos]);
 
   return (
     <div className="container">

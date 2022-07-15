@@ -1,4 +1,5 @@
 import React from "react";
+import callApi from "../ultils/apiCaller";
 
 function TodoList(props) {
   const { todos, setTodos, setEditTodo } = props;
@@ -16,11 +17,17 @@ function TodoList(props) {
 
   const handleEdit = ({ id }) => {
     const findTodo = todos.find((todo) => todo.id === id);
-    setEditTodo(findTodo);
+    if(findTodo.completed){
+      alert('Unable to edit a completed todo')
+    }else{
+      setEditTodo(findTodo);
+    }
   };
 
   const handleDelete = ({ id }) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+    callApi(`todos/${id}`, "DELETE", null).then((res) => {
+      setTodos(todos.filter((todo) => todo.id !== res.data.id));
+    });
   };
 
   return (
