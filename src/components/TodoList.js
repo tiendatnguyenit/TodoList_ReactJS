@@ -4,10 +4,16 @@ import callApi from "../ultils/apiCaller";
 function TodoList(props) {
   const { todos, setTodos, setEditTodo } = props;
 
-  const handleComplete = (todo) => {
+  const handleComplete = ({ title, idUser, completed, id }) => {
+    callApi(`todos/${id}`, "PUT", {
+      title,
+      idUser,
+      completed: !completed,
+      id,
+    })
     setTodos(
       todos.map((item) => {
-        if (item.id === todo.id) {
+        if (item.id === id) {
           return { ...item, completed: !item.completed };
         }
         return item;
@@ -17,17 +23,16 @@ function TodoList(props) {
 
   const handleEdit = ({ id }) => {
     const findTodo = todos.find((todo) => todo.id === id);
-    if(findTodo.completed){
-      alert('Unable to edit a completed todo')
-    }else{
+    if (findTodo.completed) {
+      alert("Unable to edit a completed todo");
+    } else {
       setEditTodo(findTodo);
     }
   };
 
   const handleDelete = ({ id }) => {
-    callApi(`todos/${id}`, "DELETE", null).then((res) => {
-      setTodos(todos.filter((todo) => todo.id !== res.data.id));
-    });
+    callApi(`todos/${id}`, "DELETE", null)
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   return (

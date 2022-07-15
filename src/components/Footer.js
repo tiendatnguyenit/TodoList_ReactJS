@@ -1,4 +1,5 @@
 import React from "react";
+import callApi from "../ultils/apiCaller";
 
 function Footer(props) {
   const {
@@ -13,6 +14,11 @@ function Footer(props) {
   } = props;
 
   const handleClear = () => {
+    todos.map(todo => {
+      if(todo.completed){
+        callApi(`todos/${todo.id}`, "DELETE", null)
+      }
+    })
     setTodos(todos.filter((todo) => todo.completed === false));
   };
 
@@ -21,7 +27,6 @@ function Footer(props) {
 
   const itemLeft = () => {
     const list = todos.filter((todo) => todo.completed === false);
-
     return list.length;
   };
 

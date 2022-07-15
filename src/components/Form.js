@@ -16,10 +16,10 @@ function Form(props) {
       title,
       completed,
       idUser,
-    }).then((res) => {
-      setTodos(newTodo);
-      setEditTodo("");
-    });
+    })
+    
+    setTodos(newTodo);
+    setEditTodo("");
   };
 
   useEffect(() => {
@@ -58,6 +58,7 @@ function Form(props) {
             completed: false,
             idUser: 1,
           },
+          
         ]);
       });
 

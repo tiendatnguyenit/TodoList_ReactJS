@@ -14,14 +14,10 @@ function App() {
   const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
-    callApi('todos', 'GET', null).then(res => {
-      setTodos(res.data)
+    callApi("todos", "GET", null).then((res) => {
+      setTodos(res.data);
     });
   }, []);
-
-  // useEffect(() => {
-  //   localStorage.setItem("todos", JSON.stringify(todos));
-  // }, [todos]);
 
   return (
     <div className="container">
